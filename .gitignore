@@ -1,0 +1,37 @@
+# Ignore ALL node_modules (frontend + backend)
+node_modules/
+**/node_modules/
+
+# MongoDB Memory Server huge binary cache
+.cache/
+**/.cache/
+**/mongodb-memory-server/**
+**/mongodb-memory-server/.cache/**
+
+# Logs
+logs/
+*.log
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+
+# Coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Test cache
+jest-cache/
+jest-coverage/
