@@ -1,9 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const OrganizationSchema = new mongoose.Schema({
-    name:{
-        type:String,required:true
-    }
-},{timestamps:true})
+const OrganizationSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-export default mongoose.model(OrganizationSchema,OrganizationSchema)
+export default mongoose.model(OrganizationSchema, OrganizationSchema);
