@@ -10,4 +10,4 @@ const OrganizationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model(OrganizationSchema, OrganizationSchema);
+export default mongoose.model("Organization", OrganizationSchema);

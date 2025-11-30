@@ -1,7 +1,7 @@
 import express from 'express';
-import Contact from "../models/Contact"
+import Contact from "../models/Contact.js"
 
-import { authenticate } from '../middleware/auth';
+import { authenticate } from '../middleware/auth.js';
 
 
 const router = express.Router();

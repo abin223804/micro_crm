@@ -1,19 +1,19 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import User from "../models/ User";
-import Organization from "../models/Organization";
+import User from "../models/User.js";
+import Organization from "../models/Organization.js";
 
-import { authenticate, requireRole } from "../middleware/auth";
+import { authenticate, requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.use(authenticate, requireRole("admin"));
 
 router.post("/", async (req, res) => {
-  const { email, password, role, OrganizationId } = req.body;
+  const { email, password, role, organizationId } = req.body;
 
   const org = await Organization.findById(
-    OrganizationId || req.user.OrganizationId
+    organizationId || req.user.organizationId
   );
 
   if (!org) return res.status(400).json({ error: "Organization not found" });
@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
     email,
     passwordHash,
     role: role || "member",
-    OrganizationId: org._id,
+    organizationId: org._id,
   });
 
   res.status(201).json(user);
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   const users = await User.find({
-    OrganizationId: req.user.OrganizationId,
+    organizationId: req.user.organizationId,
   }).select("-passwordHash");
   res.json(users);
 });
