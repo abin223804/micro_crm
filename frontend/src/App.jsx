@@ -1,8 +1,8 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Contacts from "./pages/Contacts.jsx";
 import CreateContact from "./pages/CreateContact.jsx";
+import EditContact from "./pages/EditContact.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 export default function App() {
@@ -13,6 +13,7 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/contacts/new" element={<CreateContact />} />
+        <Route path="/contacts/:id/edit" element={<EditContact />} />
       </Routes>
     </BrowserRouter>
   );
