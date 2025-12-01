@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import api from "../api.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth.js";
@@ -11,13 +11,13 @@ export default function Login() {
 
   async function handleLogin(e) {
     e.preventDefault();
-
     try {
       const res = await api.post("/auth/login", { email, password });
       login(res.data.token);
       navigate("/contacts");
-    } catch {
-      alert("Invalid email or password");
+    } catch (err) {
+      console.error(err);
+      alert("Invalid credentials");
     }
   }
 
@@ -25,8 +25,8 @@ export default function Login() {
     <div style={{ padding: 20 }}>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
-        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" /><br/><br/>
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" /><br/><br/>
+        <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" /><br/><br/>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" /><br/><br/>
         <button type="submit">Login</button>
       </form>
     </div>
