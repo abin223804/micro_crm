@@ -1,26 +1,23 @@
-
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/useAuth.js";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
-export default function Navbar() {
+export default function Header() {
   const { isAuthenticated, isAdmin, logout } = useAuth();
-  const navigate = useNavigate();
-
-  function handleLogout() {
-    logout();
-    navigate("/");
-  }
 
   return (
-    <nav style={{ padding: 10, borderBottom: "1px solid #ccc" }}>
+    <div style={{ padding: 15, background: "#fafafa", marginBottom: 20 }}>
       {isAuthenticated ? (
         <>
-          
-          {isAdmin && <Link to="/users/">Manage Members</Link>}&nbsp;&nbsp;
-          <button onClick={handleLogout}>Logout</button>
+          <span style={{ marginRight: 20 }}>
+            Role: <strong>{isAdmin ? "Admin" : "Member"}</strong>
+          </span>
+
+          <button onClick={logout}>Logout</button>
         </>
-      ) : null}
-    </nav>
+      ) : (
+        <Link to="/">Login</Link>
+      )}
+    </div>
   );
 }

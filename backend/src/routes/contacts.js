@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id",requireRole("admin"), async (req, res) => {
+router.put("/:id", requireRole("admin"), async (req, res) => {
   try {
     const contact = await Contact.findOneAndUpdate(
       {
@@ -55,7 +55,7 @@ router.put("/:id",requireRole("admin"), async (req, res) => {
   }
 });
 
-router.delete("/:id",requireRole("admin"), async (req, res) => {
+router.delete("/:id", requireRole("admin"), async (req, res) => {
   try {
     const contact = await Contact.findOneAndDelete({
       _id: req.params.id,
