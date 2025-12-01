@@ -11,29 +11,27 @@ export default function Contacts() {
 
   const navigate = useNavigate();
 
-  /* ---------------------- FETCH CONTACTS ---------------------- */
   const fetchContacts = useCallback(async () => {
     try {
       const res = await api.get("/contacts");
       setContacts(res.data);
     } catch (err) {
+      console.error(err);
       alert(err.response?.data?.error || "Failed to load contacts.");
     }
   }, []);
 
-  /* ---------------------- FETCH MEMBERS (ONLY MEMBERS) --------- */
   const fetchMembers = useCallback(async () => {
     if (!isAdmin) return;
-
     try {
       const res = await api.get("/users");
       setMembers(res.data.filter((u) => u.role === "member"));
     } catch (err) {
+      console.error(err);
       alert("Failed to load members.");
     }
   }, [isAdmin]);
 
-  /* ---------------------- INITIAL LOAD ---------------------- */
   useEffect(() => {
     if (!isAuthenticated) return navigate("/");
 
@@ -41,18 +39,19 @@ export default function Contacts() {
     fetchMembers();
   }, [isAuthenticated, fetchContacts, fetchMembers, navigate]);
 
-  /* ---------------------- DELETE CONTACT ---------------------- */
   async function deleteContact(id) {
+    if (!window.confirm("Delete this contact?")) return;
+
     try {
       setContacts((prev) => prev.filter((c) => c._id !== id));
       await api.delete(`/contacts/${id}`);
     } catch (err) {
-      alert("Failed to delete contact");
+      console.error("Delete contact error:", err);
+      alert("Failed to delete contact.");
       fetchContacts();
     }
   }
 
-  /* ---------------------- DELETE MEMBER ---------------------- */
   async function deleteMember(id) {
     if (!window.confirm("Delete this member?")) return;
 
@@ -60,7 +59,8 @@ export default function Contacts() {
       setMembers((prev) => prev.filter((m) => m._id !== id));
       await api.delete(`/users/${id}`);
     } catch (err) {
-      alert("Failed to delete member");
+      console.error("Delete member error:", err);
+      alert("Failed to delete member.");
       fetchMembers();
     }
   }
@@ -70,10 +70,6 @@ export default function Contacts() {
       <h2>Dashboard</h2>
 
       <div style={{ display: "flex", gap: 40 }}>
-
-        {/* ------------------------------------------------------ */}
-        {/*                     CONTACTS SECTION                   */}
-        {/* ------------------------------------------------------ */}
         <div style={{ flex: 1 }}>
           <h3>Contacts</h3>
 
@@ -91,14 +87,25 @@ export default function Contacts() {
                 style={{
                   marginBottom: 15,
                   borderBottom: "1px solid #eee",
-                  paddingBottom: 5,
+                  paddingBottom: 8,
                 }}
               >
                 <strong>{c.name}</strong> ({c.email})
                 <br />
-
+                {c.phone && (
+                  <>
+                    <small>Phone: {c.phone}</small>
+                    <br />
+                  </>
+                )}
+                {c.notes && (
+                  <>
+                    <small>Notes: {c.notes}</small>
+                    <br />
+                  </>
+                )}
                 {isAdmin && (
-                  <div style={{ marginTop: 5 }}>
+                  <div style={{ marginTop: 6 }}>
                     <Link
                       to={`/contacts/${c._id}/edit`}
                       style={{ marginRight: 10 }}
@@ -119,14 +126,10 @@ export default function Contacts() {
           </ul>
         </div>
 
-        {/* ------------------------------------------------------ */}
-        {/*                     MEMBERS SECTION                    */}
-        {/* ------------------------------------------------------ */}
         {isAdmin && (
           <div style={{ flex: 1 }}>
             <h3>Members</h3>
 
-            {/* LINK — SAME AS CONTACTS */}
             <Link
               to="/members/new"
               style={{ textDecoration: "none", fontWeight: "bold" }}
@@ -146,9 +149,7 @@ export default function Contacts() {
                 >
                   <strong>{m.email}</strong> ({m.role})
                   <br />
-
                   <div style={{ marginTop: 5 }}>
-                    {/* EDIT → OPEN EDIT MEMBER PAGE */}
                     <Link
                       to={`/members/${m._id}/edit`}
                       style={{ marginRight: 10 }}
@@ -156,7 +157,6 @@ export default function Contacts() {
                       Edit
                     </Link>
 
-                    {/* DELETE BUTTON */}
                     <button
                       onClick={() => deleteMember(m._id)}
                       style={{ color: "red", cursor: "pointer" }}
@@ -169,7 +169,6 @@ export default function Contacts() {
             </ul>
           </div>
         )}
-
       </div>
     </div>
   );
