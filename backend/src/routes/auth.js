@@ -6,32 +6,44 @@ import User from "../models/User.js";
 const router = express.Router();
 
 const jwtSecret = process.env.JWT_SECRET || "secret";
-
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || "7d";
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
 
-  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    const user = await User.findOne({ email });
 
-  const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
 
-  if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+    const valid = await bcrypt.compare(password, user.passwordHash);
 
-  const token = jwt.sign(
-    {
-      id: user._id.toString(),
-      email: user.email,
-      role: user.role,
-      organizationId: user.organizationId.toString(),
-    },
-    jwtSecret,
-    { expiresIn: jwtExpiresIn }
-  );
+    if (!valid) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
 
-  res.json({ token });
+    const token = jwt.sign(
+      {
+        id: user._id.toString(),
+        email: user.email,
+        role: user.role,
+        organizationId: user.organizationId.toString(),
+      },
+      jwtSecret,
+      { expiresIn: jwtExpiresIn }
+    );
+
+    res.json({ token });
+  } catch (err) {
+    console.error("Login Error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 export default router;

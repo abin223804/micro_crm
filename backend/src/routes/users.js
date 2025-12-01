@@ -10,31 +10,48 @@ const router = express.Router();
 router.use(authenticate, requireRole("admin"));
 
 router.post("/", async (req, res) => {
-  const { email, password, role, organizationId } = req.body;
+  try {
+    const { email, password, role, organizationId } = req.body;
 
-  const org = await Organization.findById(
-    organizationId || req.user.organizationId
-  );
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
 
-  if (!org) return res.status(400).json({ error: "Organization not found" });
+    const org = await Organization.findById(
+      organizationId || req.user.organizationId
+    );
 
-  const passwordHash = await bcrypt.hash(password, 10);
+    if (!org) {
+      return res.status(400).json({ error: "Organization not found" });
+    }
 
-  const user = await User.create({
-    email,
-    passwordHash,
-    role: role || "member",
-    organizationId: org._id,
-  });
+    const passwordHash = await bcrypt.hash(password, 10);
 
-  res.status(201).json(user);
+    const user = await User.create({
+      email,
+      passwordHash,
+      role: role || "member",
+      organizationId: org._id,
+    });
+
+    res.status(201).json(user);
+  } catch (err) {
+    console.error("Create User Error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 router.get("/", async (req, res) => {
-  const users = await User.find({
-    organizationId: req.user.organizationId,
-  }).select("-passwordHash");
-  res.json(users);
+  try {
+    const users = await User.find({
+      organizationId: req.user.organizationId,
+    }).select("-passwordHash");
+
+    res.json(users);
+  } catch (err) {
+    console.error("Get Users Error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 export default router;
