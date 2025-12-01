@@ -14,6 +14,7 @@ Users (Admin, Member)
 Contacts
 Role-Based Access Control
 
+
 Admin → manage contacts + members
 Member → view-only access
 Contact Fields
@@ -21,6 +22,7 @@ Name
 Email
 Phone (optional)
 Notes (optional)
+
 
 Tech Stack
 Node.js / Express
@@ -32,8 +34,9 @@ Axios + Context API
 
 ■ Installation
 Clone Repository
-git clone https://github.com/abin223804/micro-crm.git
+git clone https://github.com/abin223804/micro_crm.git
 cd micro-crm
+
 ■■ Backend Setup
 cd backend
 npm install
@@ -46,6 +49,7 @@ Seed DB
 npm run seed
 Run Backend
 npm run dev
+
 
 ■■ Frontend Setup
 cd frontend
