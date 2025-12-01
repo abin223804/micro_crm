@@ -15,13 +15,27 @@ router.get("/",async(req,res)=>{
 });
 
 
-router.post("/",async(req,res)=>{
+// router.post("/",async(req,res)=>{
+//     const contact = await Contact.create({
+//         ...req.body,
+//         organizationId:req.user.organizationId
+//     }).
+//     res.status(201).json(contact)
+// });
+router.post("/", async (req, res) => {
+  try {
     const contact = await Contact.create({
-        ...req.body,
-        organizationId:req.user.organizationId
-    }).
-    res.status(201).json(contact)
+      ...req.body,
+      organizationId: req.user.organizationId,
+    });
+
+    res.status(201).json(contact);
+  } catch (err) {
+    console.error("Create Contact Error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 router.put("/:id",async(req,res)=>{
 
