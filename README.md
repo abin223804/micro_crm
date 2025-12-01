@@ -1,20 +1,20 @@
-Micro-CRM — Multi-Tenant Contact & Member Management
+Micro-CRM — Multi-Tenant Contact & Member Management-
 A lightweight CRM system built with Node.js, Express, MongoDB, and React, supporting:
 
-Multi-tenancy
+Multi-tenancy->
 Role-based access control (Admin & Member)
 
 Contact management
 Member (User) management
 
-■ Features
+■ Features->
 Multi-Tenancy
 Each organization has isolated:
 Users (Admin, Member)
 Contacts
-Role-Based Access Control
 
 
+Role-Based Access Control->
 Admin → manage contacts + members
 Member → view-only access
 Contact Fields
@@ -24,7 +24,7 @@ Phone (optional)
 Notes (optional)
 
 
-Tech Stack
+Tech Stack->
 Node.js / Express
 React / Vite
 MongoDB / Mongoose
@@ -32,12 +32,12 @@ JWT Auth
 Bcrypt hashing
 Axios + Context API
 
-■ Installation
+■ Installation->
 Clone Repository
 git clone https://github.com/abin223804/micro_crm.git
 cd micro-crm
 
-■■ Backend Setup
+■■ Backend Setup->
 cd backend
 npm install
 Create .env file
@@ -51,7 +51,7 @@ Run Backend
 npm run dev
 
 
-■■ Frontend Setup
+■■ Frontend Setup->
 cd frontend
 npm install
 npm run dev
@@ -66,7 +66,7 @@ JWT contains:
 }
 
 
-All queries filtered by:
+All queries filtered by:->
 Contact.find({ organizationId: req.user.organizationId })
 ■ Auth Approach
 JWT-based login:
