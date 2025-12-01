@@ -1,95 +1,15 @@
-// import express from "express";
-// import Contact from "../models/Contact.js";
-// import { authenticate, requireRole } from "../middleware/auth.js";
-
-// const router = express.Router();
-
-// router.use(authenticate);
-
-// router.get("/", async (req, res) => {
-//   try {
-//     const contacts = await Contact.find({
-//       organizationId: req.user.organizationId,
-//     });
-
-//     res.json(contacts);
-//   } catch (err) {
-//     console.error("Get Contacts Error:", err);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-// router.post("/", async (req, res) => {
-//   try {
-//     const contact = await Contact.create({
-//       ...req.body,
-//       organizationId: req.user.organizationId,
-//     });
-
-//     res.status(201).json(contact);
-//   } catch (err) {
-//     console.error("Create Contact Error:", err);
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
-// router.put("/:id", requireRole("admin"), async (req, res) => {
-//   try {
-//     const contact = await Contact.findOneAndUpdate(
-//       {
-//         _id: req.params.id,
-//         organizationId: req.user.organizationId,
-//       },
-//       req.body,
-//       { new: true }
-//     );
-
-//     if (!contact) {
-//       return res.status(404).json({ error: "Contact not found" });
-//     }
-
-//     res.json(contact);
-//   } catch (err) {
-//     console.error("Update Contact Error:", err);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-// router.delete("/:id", requireRole("admin"), async (req, res) => {
-//   try {
-//     const contact = await Contact.findOneAndDelete({
-//       _id: req.params.id,
-//       organizationId: req.user.organizationId,
-//     });
-
-//     if (!contact) {
-//       return res.status(404).json({ error: "Contact not found" });
-//     }
-
-//     res.json({ ok: true });
-//   } catch (err) {
-//     console.error("Delete Contact Error:", err);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-// export default router;
-
-
 import express from "express";
 import Contact from "../models/Contact.js";
 import { authenticate } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// All contact routes require authentication and use req.user.organizationId
 router.use(authenticate);
 
-// GET all contacts for the logged-in user's organization
 router.get("/", async (req, res) => {
   try {
     const contacts = await Contact.find({
-      organizationId: req.user.organizationId
+      organizationId: req.user.organizationId,
     }).sort({ createdAt: -1 });
 
     res.json(contacts);
@@ -99,12 +19,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET single contact (optional)
 router.get("/:id", async (req, res) => {
   try {
     const contact = await Contact.findOne({
       _id: req.params.id,
-      organizationId: req.user.organizationId
+      organizationId: req.user.organizationId,
     });
 
     if (!contact) return res.status(404).json({ error: "Contact not found" });
@@ -115,7 +34,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// CREATE contact
 router.post("/", async (req, res) => {
   try {
     const { name, email, phone, notes } = req.body;
@@ -129,7 +47,7 @@ router.post("/", async (req, res) => {
       email,
       phone: phone || "",
       notes: notes || "",
-      organizationId: req.user.organizationId
+      organizationId: req.user.organizationId,
     });
 
     res.status(201).json(contact);
@@ -139,7 +57,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// UPDATE contact
 router.put("/:id", async (req, res) => {
   try {
     const { name, email, phone, notes } = req.body;
@@ -159,12 +76,11 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE contact
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Contact.findOneAndDelete({
       _id: req.params.id,
-      organizationId: req.user.organizationId
+      organizationId: req.user.organizationId,
     });
 
     if (!deleted) return res.status(404).json({ error: "Contact not found" });
