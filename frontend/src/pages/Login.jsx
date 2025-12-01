@@ -13,7 +13,14 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await api.post("/auth/login", { email, password });
-      login(res.data.token);
+
+      // FIXED: send token + role + orgName
+      login({
+        token: res.data.token,
+        role: res.data.role,
+        organizationName: res.data.organizationName,
+      });
+
       navigate("/contacts");
     } catch (err) {
       console.error(err);
@@ -30,16 +37,14 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
         />
-        <br />
-        <br />
+        <br /><br />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
-        <br />
-        <br />
+        <br /><br />
         <button type="submit">Login</button>
       </form>
     </div>
