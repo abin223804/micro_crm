@@ -1,6 +1,6 @@
 import express from "express";
 import Contact from "../models/Contact.js";
-import { authenticate } from "../middleware/auth.js";
+import { authenticate,requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -57,7 +57,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id",requireRole("admin"), async (req, res) => {
   try {
     const { name, email, phone, notes } = req.body;
 
@@ -76,7 +76,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",requireRole("admin"), async (req, res) => {
   try {
     const deleted = await Contact.findOneAndDelete({
       _id: req.params.id,
